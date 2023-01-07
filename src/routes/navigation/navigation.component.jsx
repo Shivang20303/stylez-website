@@ -22,6 +22,8 @@ function Navigation() {
             </Link>
           </div>
         </div>
+        {/* Outlet is used here, as we want the navigation bar to be present when the sub routers are called. So when the website 
+        is rendered, we will see the contents of the sub routers in place where the Outlet is placed i.e. after the navigation bar*/}
         <Outlet />
     </Fragment>
     //   </div>

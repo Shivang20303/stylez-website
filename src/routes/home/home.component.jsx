@@ -32,7 +32,7 @@ function Home() {
   ];
   return (
     <div>
-        <Outlet />
+        {/* <Outlet /> */}
             <Options categories={categories}/>
     </div>
   );

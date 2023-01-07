@@ -10,7 +10,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Navigation />} >
         {/* Index makes the sub-route render at the same time the parent is rendered */}
-        <Route index={true} element={<Home />} /> 
+        <Route index={true} element={<Home />} />
         <Route path="SignIn" element={<SignIn />} />
       </Route>
     </Routes>
