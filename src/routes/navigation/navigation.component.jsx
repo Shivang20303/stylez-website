@@ -20,6 +20,9 @@ function Navigation() {
             <Link className="nav-link" to='/SignIn'>
                 Sign In
             </Link>
+            <Link className='nav-link' to='/SignUp'>
+              SignUp
+            </Link>
           </div>
         </div>
         {/* Outlet is used here, as we want the navigation bar to be present when the sub routers are called. So when the website 

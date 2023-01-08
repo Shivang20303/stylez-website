@@ -34,9 +34,11 @@ export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const db = getFirestore();
 
-export async function createdoc(userAuth) {
-    const userDocRef = doc(db, 'users', userAuth.uid);
+export async function createdoc(userAuth,extraData = {}) {
 
+    if(!userAuth) return;
+
+    const userDocRef = doc(db, 'users', userAuth.uid);
     const userData = await getDoc(userDocRef);
 
     //If new user i.e. user doesn't exit in the database
@@ -49,7 +51,8 @@ export async function createdoc(userAuth) {
             await setDoc(userDocRef, {
                 displayName, 
                 email,
-                createdAt
+                createdAt,
+                ...extraData
             });
         } catch(error) {
             console.log("Error, Creating User", error.message);

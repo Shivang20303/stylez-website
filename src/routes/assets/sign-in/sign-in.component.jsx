@@ -11,11 +11,10 @@ function SignIn() {
 
     return (
         <div>
-            <h1>sign-in</h1>
+            <h1>Sign-in</h1>
             <button onClick={logGoogleUser}>
                 Sign in with Google Popup
             </button>
-            <SignUpForm />
         </div>
         
     )
