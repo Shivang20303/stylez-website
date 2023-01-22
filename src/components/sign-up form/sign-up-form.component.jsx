@@ -1,12 +1,14 @@
-import { async } from "@firebase/util";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { userContext } from "../../contexts/user.context";
+
+import FormInput from "../form-input/form-input.component";
+import Button from "../button/button.component";
 import {
     createAuthUserWithEmailAndPassword,
     createdoc,
 } from "../../utility/firebase/firebase.utility";
-import  FormInput from "../form-input/form-input.component";
+
 import "./sign-up-form.styles.scss";
-import Button from "../button/button.component";
 
 const defaultFields = {
     displayName: "",
@@ -14,13 +16,19 @@ const defaultFields = {
     password: "",
     confirmPassword: "",
 };
+
+
 function SignUpForm() {
     const [formFields, setFormFields] = useState(defaultFields);
     const { displayName, email, password, confirmPassword } = formFields;
 
+    //Whenever you open the sign up page and try to login, the function will re-render/re-run because of useContext
+    const { setCurrentUser } = useContext(userContext);
+
     function resetFields() {
         setFormFields(defaultFields);
-    }
+    };
+
     function handleChange(event) {
         const { name, value } = event.target;
 
@@ -30,8 +38,8 @@ function SignUpForm() {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        if (password != confirmPassword) {
-            alert("passwords do not match");
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
             return;
         }
 
@@ -40,20 +48,31 @@ function SignUpForm() {
                 email,
                 password
             );
-            await createdoc(user, { displayName });
+
+
+            const b = await createdoc(user, { displayName });
+            console.log(user);
+            console.log(b);
             resetFields();
+            setCurrentUser(user);
+
         } catch (error) {
-            if (error.code == "auth/email-already-in-use") {
+            if (error.code === "auth/email-already-in-use") {
                 alert("Email already used to SignUp");
             } else {
                 console.log("User Creation error", error);
             }
+            if (error.code === "auth/weak-password") {
+                alert("Password should have atleast 6 characters");
+            } else {
+                console.log("User Creation error", error);
+            }
         }
-    }
+    };
 
     return (
         <div className="sign-up-container">
-            <h1>Signup</h1>
+            <h1>Sign up</h1>
             <form onSubmit={handleSubmit}>
                 <FormInput
                     label="Username"
@@ -95,6 +114,6 @@ function SignUpForm() {
             </form>
         </div>
     );
-}
+};
 
 export default SignUpForm;

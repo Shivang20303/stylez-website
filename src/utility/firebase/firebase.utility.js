@@ -1,9 +1,17 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics, signI } from "firebase/analytics";
-import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';   //For Authorization
+import {
+    signOut,
+    getAuth,
+    signInWithRedirect,
+    signInWithPopup,
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+} from "firebase/auth"; //For Authorization
 //The doc library is used to create individual user document
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -17,7 +25,7 @@ const firebaseConfig = {
     storageBucket: "stylezy-db.appspot.com",
     messagingSenderId: "159259860049",
     appId: "1:159259860049:web:1d7d0c574c19e1d128ac70",
-    measurementId: "G-BW20HHNEB2"
+    measurementId: "G-BW20HHNEB2",
 };
 
 // Initialize Firebase
@@ -26,7 +34,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
-    prompt: "select_account"    //On clicking the button it will always ask user to select the account with it will be logged in
+    prompt: "select_account", //On clicking the button it will always ask user to select the account with it will be logged in
 });
 
 //To initialize authentication
@@ -34,11 +42,10 @@ export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const db = getFirestore();
 
-export async function createdoc(userAuth,extraData = {}) {
+export async function createdoc(userAuth, extraData = {}) {
+    if (!userAuth) return;
 
-    if(!userAuth) return;
-
-    const userDocRef = doc(db, 'users', userAuth.uid);
+    const userDocRef = doc(db, "users", userAuth.uid);
     const userData = await getDoc(userDocRef);
 
     //If new user i.e. user doesn't exit in the database
@@ -49,28 +56,36 @@ export async function createdoc(userAuth,extraData = {}) {
 
         try {
             await setDoc(userDocRef, {
-                displayName, 
+                displayName,
                 email,
                 createdAt,
-                ...extraData
+                ...extraData,
             });
-        } catch(error) {
+        } catch (error) {
             console.log("Error, Creating User", error.message);
         }
     }
 
     return userDocRef;
+}
+
+export async function createAuthUserWithEmailAndPassword (email, password){
+    if (!email || !password) return;
+
+    return await createUserWithEmailAndPassword(auth, email, password);
+};
+export async function signInAuthUserWithEmailAndPassword(email, password) {
+    if (!email || !password) return;
+
+    return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
-    if(!email || !password)
-        return;
-    
-    return await createUserWithEmailAndPassword(auth,email,password);
+export async function signOutUser() {
+    signOut(auth);
 };
-export const signInAuthUserWithEmailAndPassword = async (email, password) => {
-    if(!email || !password)
-        return;
-    
-    return await signInWithEmailAndPassword(auth,email,password);
-};
+
+// useContext causes functions to re-run but this prevents it
+//callback is whenever the user signIn or signOut
+export function onAuthStateChangedListener(callback) {
+    onAuthStateChanged(auth,callback);
+}
