@@ -21,7 +21,7 @@ function Navigation() {
         </Link>
         <div className="nav-links-container">
           {/* Creates a hyperlink thats wrapped inside the link; acts like anchor tag in html */}
-          <Link className="nav-link" to="/home">
+          <Link className="nav-link" to="/shop">
             Shop
           </Link>
           {currentUser ? (
