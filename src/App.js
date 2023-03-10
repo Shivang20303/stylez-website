@@ -4,6 +4,7 @@ import Navigation from "./routes/navigation/navigation.component";
 import Authentication from "./assets/authentication/authentication.component";
 import SignUpForm from "./components/sign-up form/sign-up-form.component";
 import Shop from "./routes/shop/shop.component";
+import Checkout from "./routes/checkout/checkout.component";
 
 <Navigation/>
 
@@ -16,6 +17,7 @@ function App() {
         <Route path="shop" element={<Shop />}/>
         <Route path="login" element={<Authentication />} />
         <Route path="SignUp" element={<SignUpForm/>} />
+        <Route path="Checkout" element={<Checkout/>} />
       </Route>
     </Routes>
   );
